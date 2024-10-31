@@ -7,12 +7,12 @@ botsubphase = 0
 
 buttons = [["My Statistics📊","My Club Statistics📊"],["Brawlers Wiki🔎"]]
 cancelbutton = [["Back🔙"]]
-howtogetclub = [["Enter Club Tag"], ["Get Club Info Via Player Tag"], ["Back🔙"]]
+howtogetclub = [["Get Club Stats With Club Tag"], ["Get My Current Clubs Stats"], ["Back🔙"]]
 
 
 
 
-client = brawlstats.Client("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImQzYjEyZTg5LTg5YzUtNGIyNC1iMTVmLTc1YTVmZWU0Yjc4MCIsImlhdCI6MTczMDMwNTEyOSwic3ViIjoiZGV2ZWxvcGVyLzJlNDc3NGVkLWFlNmMtOWU0Yy00N2YxLWU1NjA2NzI4ZmExOCIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiMTg1LjIxMy4yMjkuNTIiXSwidHlwZSI6ImNsaWVudCJ9XX0.V-fQqd-LAvkwL7EATUFskwjCMTeZ4W62vJQi8CZj-XXrvL5tiIelAvp_ZolHIYCkiVIr1cq-yrgkKGLqT4gq6A", is_async=True)
+client = brawlstats.Client("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjAzOTljZWM2LTIzZDQtNGFlMC1iMWZiLTk3Mzg2MmYyZDdkZiIsImlhdCI6MTczMDM2ODMyNCwic3ViIjoiZGV2ZWxvcGVyLzJlNDc3NGVkLWFlNmMtOWU0Yy00N2YxLWU1NjA2NzI4ZmExOCIsInNjb3BlcyI6WyJicmF3bHN0YXJzIl0sImxpbWl0cyI6W3sidGllciI6ImRldmVsb3Blci9zaWx2ZXIiLCJ0eXBlIjoidGhyb3R0bGluZyJ9LHsiY2lkcnMiOlsiMTg1LjIxMy4yMjkuNTAiXSwidHlwZSI6ImNsaWVudCJ9XX0.k6eIhR2NGs5uF76GqJuGKcN_7yU2XjdJ_OBvNJFPqxf1EVLDWiYe8ZURvgf2UnVPrKW4cqXOfoz7wHycsaHPgQ", is_async=True)
 sections = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 cancel = ReplyKeyboardMarkup(cancelbutton, resize_keyboard=True)
 getclubmethod = ReplyKeyboardMarkup(howtogetclub, resize_keyboard=True)
@@ -78,10 +78,10 @@ async def process(update: Update, context):
                 await update.message.reply_text("Please Enter Valid Player Tag")
     elif botphase == 2:
         if botsubphase == 0:
-            if msg == "Enter Club Tag":
+            if msg == "Get Club Stats With Club Tag":
                 await update.message.reply_text("Please Enter Your Club Tag", reply_markup=cancel)
                 botsubphase = 1
-            elif msg == "Get Club Info Via Player Tag":
+            elif msg == "Get My Current Clubs Stats":
                 await update.message.reply_text("Please Enter Your Player Tag", reply_markup=cancel)
                 botsubphase = 2
             if msg == "Back🔙":
@@ -111,22 +111,22 @@ async def process(update: Update, context):
                     await update.message.reply_text("Choose One Of The Options Below", reply_markup=getclubmethod)
                     botsubphase = 0
             else:
-                #try:
-                ppclub = await client.get_profile(msg.upper())
-                clubid = ppclub["club"].tag
-                club = await client.get_club(clubid.upper())
-                iteration = 1
-                clubname = club["name"]
-                clubtrophies = club["trophies"]
-                club_description = club["description"]
-                clubrequiredtrophies = club["requiredTrophies"]
-                clubmembers = f""
-                for member in club.members:
-                    clubmembers = clubmembers + f"\n{iteration}. {member.name} | {member.tag} | {member.role.upper()}"
-                    iteration += 1
-                await update.message.reply_text(f"🔤Club Name: {clubname}\n🖥Description: {club_description}\n🏆Club Trophies: {clubtrophies}\n🏆Required Trophies To Join: {clubrequiredtrophies}\n\n👥Club Members List: {clubmembers}", disable_web_page_preview=True)
-                #except:
-                    #await update.message.reply_text("Please Enter Valid player Tag")
+                try:
+                    ppclub = await client.get_profile(msg.upper())
+                    clubid = ppclub["club"].tag
+                    club = await client.get_club(clubid.upper())
+                    iteration = 1
+                    clubname = club["name"]
+                    clubtrophies = club["trophies"]
+                    club_description = club["description"]
+                    clubrequiredtrophies = club["requiredTrophies"]
+                    clubmembers = f""
+                    for member in club.members:
+                        clubmembers = clubmembers + f"\n{iteration}. {member.name} | {member.tag} | {member.role.upper()}"
+                        iteration += 1
+                    await update.message.reply_text(f"🔤Club Name: {clubname}\n🖥Description: {club_description}\n🏆Club Trophies: {clubtrophies}\n🏆Required Trophies To Join: {clubrequiredtrophies}\n\n👥Club Members List: {clubmembers}", disable_web_page_preview=True)
+                except:
+                    await update.message.reply_text("Please Enter Valid player Tag")
 
 if __name__ == '__main__':
     app = ApplicationBuilder().token("7818134232:AAFM6ufKSfDHwa7Jp08fAkphRZqNLC01fv8").build()
